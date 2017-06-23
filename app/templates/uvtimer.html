@@ -110,7 +110,7 @@
                     var str = Object.keys(data).map(function(key){
                         return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
                     }).join('&');
-                    alert(window.location.href = "{{ url_for('store_time') }}?"+str);
+                    window.location.href = "{{ url_for('store_time') }}?"+str;
 
 //                    $.ajax({
 //
