@@ -94,7 +94,7 @@
                 Clock.restart();
             });
 
-            $("#Submit").on("click", function (e) {
+            $("#Submit").on("click",function(e) {
                 e.preventDefault()
                 var min = document.getElementById("min").innerHTML;
                 var sec = document.getElementById("sec").innerHTML;
@@ -106,10 +106,11 @@
 
                 if (uv != 0) {
 
-                    var data = {'min': min, 'sec': sec, 'uv': uv, 'variant': variant, 'type': type};
-                    var str = Object.keys(data).map(function (key) {
+                    var data = {'min': min, 'sec': sec, 'uv': uv, 'variant':variant, 'type':type};
+                    var str = Object.keys(data).map(function(key){
                         return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
                     }).join('&');
+                    alert(window.location.href = "{{ url_for('store_time') }}?"+str);
 
 //                    $.ajax({
 //
@@ -159,8 +160,8 @@
         </div>
     </div>
     <div class="well bs-component">
-        {% if message %}
-        <div class="alert alert-{{ modifier }}">{{ message|safe }}</div>
+         {% if message %}
+            <div class="alert alert-{{ modifier }}">{{ message|safe }}</div>
         {% endif %}
         <form class="form-horizontal">
             <fieldset>
@@ -174,14 +175,14 @@
                 </div>
                 <div class="form-group">
                     <label class="col-lg-2 control-label" for="type">Type of Analysis</label>
-                    <div class="col-lg-10">
+                <div class="col-lg-10">
                         <select id="type" class="form-control" name="type">
                             <option value="writing">writing</option>
                             <option value="authorising">authorising</option>
                             <option value="reviewing">reviewing</option>
                         </select>
                     </div>
-                </div>
+                    </div>
 
                 <div class="form-group">
                     <label class="col-lg-2 control-label" for="type">Final UV</label>
@@ -198,7 +199,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
-                        <!--<a href="#" id="Submit" class="btn btn-danger">Stop & Submit</a>-->
+                         <!--<a href="#" id="Submit" class="btn btn-danger">Stop & Submit</a>-->
                         <input id="Submit" type="submit" value="Stop & Submit" class="btn btn-danger">
                     </div>
                 </div>
