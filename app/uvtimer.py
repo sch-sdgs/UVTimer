@@ -16,11 +16,13 @@ class UV(db.Model):
     variant = db.Column(db.String(100), unique=False)
     time = db.Column(db.Integer)
     uvlevel = db.Column(db.Integer)
+    type = db.Column(db.String(100), unique=False)
 
-    def __init__(self, variant, time, uvlevel):
+    def __init__(self, variant, time, uvlevel, type):
         self.variant = variant
         self.time = time
         self.uvlevel = uvlevel
+        self.type = type
 
     def __repr__(self):
         return '<UV %r>' % (self.variant)
@@ -28,19 +30,25 @@ class UV(db.Model):
 print UV
 
 @app.route('/')
-def index():
-    return render_template("uvtimer.html")
+def index(message=None,modifier=None):
+    print message
+    return render_template("uvtimer.html",message=message,modifier=modifier)
 
 
-@app.route('/store_time',methods=['GET','POST'])
+@app.route('/store_time',methods=['POST','GET'])
 def store_time():
-    print request.json
-    time = (int(request.json['min'])*60)+int(request.json['sec'])
-
-    uv = UV(variant=request.json['variant'],time=time,uvlevel=int(request.json['uv']))
-
-    print uv
+    print request.args
+    time = (int(request.args['min'])*60)+int(request.args['sec'])
+    uv = UV(variant=request.args['variant'],time=time,uvlevel=int(request.args['uv']),type=request.args['type'])
     s.add(uv)
-    s.commit()
-    return render_template("uvtimer.html")
+    try:
+        s.commit()
+        message="Recorded that this UV"+request.args['uv']+" took "+request.args['min']+":"+request.args['sec']
+        modifier="success"
+    except:
+        message="Something went wrong "+request.args['uv']+" took "+request.args['min']+":"+request.args['sec']
+        modifier="danger"
+
+    return render_template("uvtimer.html", message=message, modifier=modifier)
+
 

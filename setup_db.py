@@ -9,7 +9,7 @@ def create_db(conn):
         pp.executescript("begin")
         pp.executescript("""
         CREATE TABLE uv
-            (id INTEGER PRIMARY KEY, variant VARCHAR(100), time INTEGER , uvlevel INTEGER);
+            (id INTEGER PRIMARY KEY, variant VARCHAR(100), time INTEGER , uvlevel INTEGER, type VARCHAR(100));
         """)
         pp.executescript("commit")
         return True

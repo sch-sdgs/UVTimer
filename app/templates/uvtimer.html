@@ -1,3 +1,4 @@
+{% block content %}
 <html>
 <head>
     <title>UV Analysis Timer</title>
@@ -93,26 +94,33 @@
                 Clock.restart();
             });
 
-            $("#timer").submit(function () {
+            $("#Submit").on("click", function (e) {
+                e.preventDefault()
                 var min = document.getElementById("min").innerHTML;
                 var sec = document.getElementById("sec").innerHTML;
                 var select = document.getElementById("uv");
                 var uv = select.options[select.selectedIndex].value;
                 var variant = document.getElementById("variant").value;
+                var type = document.getElementById("type").value;
+
 
                 if (uv != 0) {
 
-                    var data = {'min': min, 'sec': sec, 'uv': uv, 'variant':variant};
+                    var data = {'min': min, 'sec': sec, 'uv': uv, 'variant': variant, 'type': type};
+                    var str = Object.keys(data).map(function (key) {
+                        return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+                    }).join('&');
 
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ url_for('store_time') }}",
-                        data: JSON.stringify(data, null, '\t'),
-                        contentType: 'application/json;charset=UTF-8',
-                        success: function (result) {
-                            Clock.reset()
-                        }
-                    })
+//                    $.ajax({
+//
+//                        type: "POST",
+//                        url: "{{ url_for('store_time') }}",
+//                        data: JSON.stringify(data, null, '\t'),
+//                        contentType: 'application/json;charset=UTF-8',
+//                        success: function (result) {
+//                           return false;
+//                        }
+//                    })
                 }
                 else {
                     alert("UV level must be completed!")
@@ -151,7 +159,10 @@
         </div>
     </div>
     <div class="well bs-component">
-        <form id="timer" class="form-horizontal">
+        {% if message %}
+        <div class="alert alert-{{ modifier }}">{{ message|safe }}</div>
+        {% endif %}
+        <form class="form-horizontal">
             <fieldset>
                 <legend>Please Complete and Submit!</legend>
                 <div class="form-group">
@@ -162,7 +173,18 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-lg-2 control-label" for="uv">Final UV</label>
+                    <label class="col-lg-2 control-label" for="type">Type of Analysis</label>
+                    <div class="col-lg-10">
+                        <select id="type" class="form-control" name="type">
+                            <option value="writing">writing</option>
+                            <option value="authorising">authorising</option>
+                            <option value="reviewing">reviewing</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label" for="type">Final UV</label>
                     <div class="col-lg-10">
                         <select id="uv" class="form-control" name="uv">
                             <option value="0">--select uv level--</option>
@@ -176,6 +198,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-lg-10 col-lg-offset-2">
+                        <!--<a href="#" id="Submit" class="btn btn-danger">Stop & Submit</a>-->
                         <input id="Submit" type="submit" value="Stop & Submit" class="btn btn-danger">
                     </div>
                 </div>
@@ -187,3 +210,4 @@
 </body>
 
 </html>
+{% endblock %}
