@@ -27,26 +27,22 @@ class UV(db.Model):
     def __repr__(self):
         return '<UV %r>' % (self.variant)
 
-print UV
-
 @app.route('/')
 def index(message=None,modifier=None):
-    print message
     return render_template("uvtimer.html",message=message,modifier=modifier)
-
 
 @app.route('/store_time',methods=['POST','GET'])
 def store_time():
-    print request.args
-    time = (int(request.args['min'])*60)+int(request.args['sec'])
+    time = ((int(request.args['hours'])*60)*60)+(int(request.args['min'])*60)+int(request.args['sec'])
+    print time
     uv = UV(variant=request.args['variant'],time=time,uvlevel=int(request.args['uv']),type=request.args['type'])
     s.add(uv)
     try:
         s.commit()
-        message="Recorded that this UV"+request.args['uv']+" took "+request.args['min']+":"+request.args['sec']
+        message="Recorded that this UV"+request.args['uv']+" took "+request.args['hours']+":"+request.args['min']+":"+request.args['sec']
         modifier="success"
     except:
-        message="Something went wrong "+request.args['uv']+" took "+request.args['min']+":"+request.args['sec']
+        message="Something went wrong "+request.args['uv']+" took "+request.args['hours']+":"+request.args['min']+":"+request.args['sec']
         modifier="danger"
 
     return render_template("uvtimer.html", message=message, modifier=modifier)
